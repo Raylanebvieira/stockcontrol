@@ -23,9 +23,11 @@ public class ProdutoService {
     public List<Produto> listarTodos() {
         return produtoRepository.findAll();
     }
+
     public Optional<Produto> buscarPorId(Long id) {
         return produtoRepository.findById(id);
     }
+
     public Optional<Produto> atualizar(Long id, Produto produtoAtualizado) {
 
         return produtoRepository.findById(id)
@@ -40,6 +42,7 @@ public class ProdutoService {
                     return produtoRepository.save(produto);
                 });
     }
+
     public boolean excluir(Long id) {
 
         if (!produtoRepository.existsById(id)) {
@@ -48,5 +51,48 @@ public class ProdutoService {
 
         produtoRepository.deleteById(id);
         return true;
+    }
+
+    public Optional<Produto> entradaEstoque(Long id, Integer quantidade) {
+
+        return produtoRepository.findById(id)
+                .map(produto -> {
+
+                    if (quantidade <= 0) {
+                        throw new IllegalArgumentException(
+                                "A quantidade de entrada deve ser maior que zero."
+                        );
+                    }
+
+                    int novaQuantidade = produto.getQuantidade() + quantidade;
+
+                    produto.setQuantidade(novaQuantidade);
+
+                    return produtoRepository.save(produto);
+                });
+    }
+    public Optional<Produto> saidaEstoque(Long id, Integer quantidade) {
+
+        return produtoRepository.findById(id)
+                .map(produto -> {
+
+                    if (quantidade <= 0) {
+                        throw new IllegalArgumentException(
+                                "A quantidade de saída deve ser maior que zero."
+                        );
+                    }
+
+                    if (quantidade > produto.getQuantidade()) {
+                        throw new IllegalArgumentException(
+                                "Estoque insuficiente para realizar a saída."
+                        );
+                    }
+
+                    int novaQuantidade = produto.getQuantidade() - quantidade;
+
+                    produto.setQuantidade(novaQuantidade);
+
+                    return produtoRepository.save(produto);
+                });
     }
 }

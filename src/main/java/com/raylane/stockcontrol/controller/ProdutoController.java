@@ -52,4 +52,23 @@ public class ProdutoController {
 
         return ResponseEntity.notFound().build();
     }
+    @PatchMapping("/{id}/entrada")
+    public ResponseEntity<Produto> entradaEstoque(
+            @PathVariable Long id,
+            @RequestParam Integer quantidade) {
+
+        return produtoService.entradaEstoque(id, quantidade)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    @PatchMapping("/{id}/saida")
+    public ResponseEntity<Produto> saidaEstoque(
+            @PathVariable Long id,
+            @RequestParam Integer quantidade) {
+
+        return produtoService.saidaEstoque(id, quantidade)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }
