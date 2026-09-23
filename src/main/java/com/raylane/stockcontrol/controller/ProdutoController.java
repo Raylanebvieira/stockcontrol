@@ -70,5 +70,8 @@ public class ProdutoController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    @GetMapping("/estoque-baixo")
+    public List<Produto> listarProdutosComEstoqueBaixo() {
+        return produtoService.listarProdutosComEstoqueBaixo();
+    }
 }

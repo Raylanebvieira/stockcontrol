@@ -95,4 +95,7 @@ public class ProdutoService {
                     return produtoRepository.save(produto);
                 });
     }
+    public List<Produto> listarProdutosComEstoqueBaixo() {
+        return produtoRepository.buscarProdutosComEstoqueBaixo();
+    }
 }
