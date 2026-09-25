@@ -44,7 +44,6 @@ public class ProdutoService {
                     produto.setNome(produtoAtualizado.getNome());
                     produto.setDescricao(produtoAtualizado.getDescricao());
                     produto.setPreco(produtoAtualizado.getPreco());
-                    produto.setQuantidade(produtoAtualizado.getQuantidade());
                     produto.setEstoqueMinimo(produtoAtualizado.getEstoqueMinimo());
 
                     return produtoRepository.save(produto);
