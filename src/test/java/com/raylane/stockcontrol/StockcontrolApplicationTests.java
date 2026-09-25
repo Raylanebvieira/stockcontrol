@@ -1,13 +1,12 @@
 package com.raylane.stockcontrol;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootApplication
-public class StockcontrolApplication {
+@SpringBootTest
+class StockcontrolApplicationTests {
 
-    public static void main(String[] args) {
-        SpringApplication.run(StockcontrolApplication.class, args);
+    @Test
+    void contextLoads() {
     }
-
 }
