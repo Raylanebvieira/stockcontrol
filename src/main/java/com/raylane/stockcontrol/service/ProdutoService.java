@@ -6,14 +6,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import com.raylane.stockcontrol.model.MovimentacaoEstoque;
+import com.raylane.stockcontrol.repository.MovimentacaoEstoqueRepository;
+import java.time.LocalDateTime;
 
 @Service
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    public ProdutoService(
+            ProdutoRepository produtoRepository,
+            MovimentacaoEstoqueRepository movimentacaoEstoqueRepository) {
+
         this.produtoRepository = produtoRepository;
+        this.movimentacaoEstoqueRepository = movimentacaoEstoqueRepository;
     }
 
     public Produto salvar(Produto produto) {
@@ -68,7 +76,18 @@ public class ProdutoService {
 
                     produto.setQuantidade(novaQuantidade);
 
-                    return produtoRepository.save(produto);
+                    Produto produtoAtualizado = produtoRepository.save(produto);
+
+                    MovimentacaoEstoque movimentacao = new MovimentacaoEstoque();
+
+                    movimentacao.setTipo("ENTRADA");
+                    movimentacao.setQuantidade(quantidade);
+                    movimentacao.setDataHora(LocalDateTime.now());
+                    movimentacao.setProduto(produtoAtualizado);
+
+                    movimentacaoEstoqueRepository.save(movimentacao);
+
+                    return produtoAtualizado;
                 });
     }
     public Optional<Produto> saidaEstoque(Long id, Integer quantidade) {
@@ -92,7 +111,18 @@ public class ProdutoService {
 
                     produto.setQuantidade(novaQuantidade);
 
-                    return produtoRepository.save(produto);
+                    Produto produtoAtualizado = produtoRepository.save(produto);
+
+                    MovimentacaoEstoque movimentacao = new MovimentacaoEstoque();
+
+                    movimentacao.setTipo("SAIDA");
+                    movimentacao.setQuantidade(quantidade);
+                    movimentacao.setDataHora(LocalDateTime.now());
+                    movimentacao.setProduto(produtoAtualizado);
+
+                    movimentacaoEstoqueRepository.save(movimentacao);
+
+                    return produtoAtualizado;
                 });
     }
     public List<Produto> listarProdutosComEstoqueBaixo() {
