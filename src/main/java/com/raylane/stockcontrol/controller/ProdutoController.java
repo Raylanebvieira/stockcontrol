@@ -5,6 +5,8 @@ import com.raylane.stockcontrol.service.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import com.raylane.stockcontrol.dto.ProdutoRequestDTO;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,7 +22,17 @@ public class ProdutoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Produto cadastrar(@RequestBody Produto produto) {
+    public Produto cadastrar(
+            @Valid @RequestBody ProdutoRequestDTO dto) {
+
+        Produto produto = new Produto();
+
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setPreco(dto.getPreco());
+        produto.setQuantidade(dto.getQuantidade());
+        produto.setEstoqueMinimo(dto.getEstoqueMinimo());
+
         return produtoService.salvar(produto);
     }
 
@@ -37,12 +49,21 @@ public class ProdutoController {
     @PutMapping("/{id}")
     public ResponseEntity<Produto> atualizar(
             @PathVariable Long id,
-            @RequestBody Produto produto) {
+            @Valid @RequestBody ProdutoRequestDTO dto) {
+
+        Produto produto = new Produto();
+
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setPreco(dto.getPreco());
+        produto.setQuantidade(dto.getQuantidade());
+        produto.setEstoqueMinimo(dto.getEstoqueMinimo());
 
         return produtoService.atualizar(id, produto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
 
