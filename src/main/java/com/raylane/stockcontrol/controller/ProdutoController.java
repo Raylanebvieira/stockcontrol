@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.raylane.stockcontrol.dto.ProdutoUpdateDTO;
 
 import java.util.List;
 
@@ -73,19 +74,18 @@ public class ProdutoController {
 
     @Operation(
             summary = "Atualizar produto",
-            description = "Atualiza os dados cadastrais de um produto existente."
+            description = "Atualiza os dados cadastrais do produto sem alterar a quantidade em estoque."
     )
     @PutMapping("/{id}")
     public ResponseEntity<Produto> atualizar(
             @PathVariable Long id,
-            @Valid @RequestBody ProdutoRequestDTO dto) {
+            @Valid @RequestBody ProdutoUpdateDTO dto) {
 
         Produto produto = new Produto();
 
         produto.setNome(dto.getNome());
         produto.setDescricao(dto.getDescricao());
         produto.setPreco(dto.getPreco());
-        produto.setQuantidade(dto.getQuantidade());
         produto.setEstoqueMinimo(dto.getEstoqueMinimo());
 
         return produtoService.atualizar(id, produto)
