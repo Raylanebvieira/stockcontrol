@@ -11,6 +11,7 @@ import com.raylane.stockcontrol.model.Produto;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.mockito.Mockito.when;
 
@@ -59,5 +60,28 @@ class ProdutoServiceTest {
         assertEquals(new java.math.BigDecimal("999.90"), resultado.get().getPreco());
         assertEquals(4, resultado.get().getEstoqueMinimo());
         assertEquals(10, resultado.get().getQuantidade());
+    }
+
+    @Test
+    void deveImpedirSaidaQuandoEstoqueForInsuficiente() {
+
+        Produto produto = new Produto();
+
+        produto.setId(1L);
+        produto.setNome("Monitor LED 24");
+        produto.setQuantidade(10);
+
+        when(produtoRepository.findById(1L))
+                .thenReturn(Optional.of(produto));
+
+        IllegalArgumentException excecao = assertThrows(
+                IllegalArgumentException.class,
+                () -> produtoService.saidaEstoque(1L, 15)
+        );
+
+        assertEquals(
+                "Estoque insuficiente para realizar a saída.",
+                excecao.getMessage()
+        );
     }
 }
